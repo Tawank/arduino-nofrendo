@@ -1,13 +1,14 @@
-# arduino-nofrendo
+# Nofrendo ESP-IDF component
 
-This is a special nofrendo version as a Arduino library.
+This component contains the portable Nofrendo NES emulator core from
+`Tawank/arduino-nofrendo`. Hardware and operating-system integration is supplied
+by the consumer through the functions declared in `osd.h`.
 
-## Implementation
+Normal ESP-IDF applications can add `nofrendo` to their component `REQUIRES`.
+Bruce ELF applications must instead include `nofrendo_sources.cmake` and add
+`${NOFRENDO_SOURCES}` to their main component. Espressif's `project_elf()` target
+links only `libmain.a`, so a regular component dependency would not be included
+in the loadable ELF.
 
-Simple implement all function definded in osd.h to make it work.
-
-Any Arduino platform that have enough processing power should work.
-
-## Examples
-
-- esp32-nofrendo.ino in examples folder is rewritten from https://github.com/espressif/esp32-nesemu.git
+The Bruce implementation is in `elf_apps/examples/nes/main/nes_osd.c` and uses
+only public `core_sdk` APIs for display, input, storage, memory, and timing.

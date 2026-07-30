@@ -23,7 +23,7 @@
 ** $Id: nes_pal.c,v 1.2 2001/04/27 14:37:11 neil Exp $
 */
 
-#include <math.h>
+#include <string.h>
 #include "../noftypes.h"
 #include "../bitmap.h"
 #include "nes_pal.h"
@@ -138,68 +138,7 @@ static const int col_angles[16] =
 
 void pal_generate(void)
 {
-   int x, z;
-   float s, y, theta;
-   int r, g, b;
-
-   for (x = 0; x < 4; x++)
-   {
-      for (z = 0; z < 16; z++)
-      {
-         switch (z)
-         {
-         case 0:
-            /* is color $x0?  If so, get luma */
-            s = 0;
-            y = brightness[0][x];
-            break;
-
-         case 13:
-            /* is color $xD?  If so, get luma */
-            s = 0;
-            y = brightness[2][x];
-            break;
-
-         case 14:
-         case 15:
-            /* is color $xE/F?  If so, set to black */
-            s = 0;
-            y = brightness[3][x];
-
-            break;
-
-         default:
-            s = tint;             /* grab tint */
-            y = brightness[1][x]; /* grab default luminance */
-            break;
-         }
-
-         theta = (float)(PI * ((col_angles[z] + hue) / 180.0));
-
-         r = (int)(256.0 * (y + s * sin(theta)));
-         g = (int)(256.0 * (y - ((27 / 53.0) * s * sin(theta)) + ((10 / 53.0) * s * cos(theta))));
-         b = (int)(256.0 * (y - (s * cos(theta))));
-
-         if (r > 255)
-            r = 255;
-         else if (r < 0)
-            r = 0;
-
-         if (g > 255)
-            g = 255;
-         else if (g < 0)
-            g = 0;
-
-         if (b > 255)
-            b = 255;
-         else if (b < 0)
-            b = 0;
-
-         nes_palette[(x << 4) + z].r = r;
-         nes_palette[(x << 4) + z].g = g;
-         nes_palette[(x << 4) + z].b = b;
-      }
-   }
+   memcpy(nes_palette, shady_palette, sizeof(nes_palette));
 }
 
 /*
